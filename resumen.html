@@ -11,8 +11,9 @@
     tailwind.config = { darkMode: 'class' }
   </script>
   
-  <!-- Chart.js & Feather Icons -->
+  <!-- Chart.js, Plotly.js & Feather Icons -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
   <script src="https://unpkg.com/feather-icons"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
@@ -37,13 +38,10 @@
     <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
       
       <div class="flex items-center space-x-4">
-        <img src="./logo_inta.png" alt="Logo INTA" onerror="this.style.display='none'" class="h-14 bg-white p-1 rounded-lg shadow-md transition-transform hover:scale-105">
+        <img src="./logo_inta.png" alt="Logo INTA" class="h-14 bg-white p-1 rounded-lg shadow-md transition-transform hover:scale-105">
         <div>
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-sky-400/30 text-sky-100 rounded-full border border-sky-300/30">NOAA Report</span>
-            <span class="text-xs text-blue-200">Estación Meteorológica Automática</span>
-          </div>
-          <h1 class="text-lg sm:text-xl font-bold tracking-tight">INTA EECT Yuto - Jujuy</h1>
+          <h1 class="text-lg sm:text-xl font-bold tracking-tight">Estación Meteorológica Automática</h1>
+          <p class="text-blue-200 text-xs font-medium">INTA Yuto - Jujuy</p>
         </div>
       </div>
 
@@ -63,32 +61,34 @@
     </div>
 
     <!-- NAVBAR Y PESTAÑAS DE VISTA -->
-    <nav class="bg-black/25 backdrop-blur-md border-t border-white/10">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 py-2">
-        
-        <!-- Enlaces directos -->
-        <div class="flex items-center overflow-x-auto py-1 text-xs font-medium gap-2 no-scrollbar whitespace-nowrap w-full sm:w-auto">
-          <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-white/15 text-blue-100 hover:text-white transition-all">
-            <i data-feather="home" class="h-3.5 w-3.5"></i> Principal
-          </a>
-        </div>
+    <nav class="bg-black/20 backdrop-blur-md border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between overflow-x-auto py-2 text-xs font-medium gap-2 no-scrollbar whitespace-nowrap">
+          
+          <!-- Enlace Principal -->
+          <div class="flex items-center gap-2">
+            <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all shadow-sm">
+              <i data-feather="home" class="h-3.5 w-3.5"></i> Principal
+            </a>
+          </div>
 
-        <!-- Selector de Pestañas: Mes / Año / Todo -->
-        <div class="flex items-center bg-black/30 p-1 rounded-xl border border-white/15 text-xs font-semibold gap-1 self-stretch sm:self-auto justify-center">
-          <button id="tab-btn-mes" onclick="cambiarPestana('mes')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500 text-white shadow-sm transition-all">
-            <i data-feather="calendar" class="h-3.5 w-3.5"></i> Mes en Curso
-          </button>
-          <button id="tab-btn-anio" onclick="cambiarPestana('anio')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-blue-100 hover:text-white hover:bg-white/10 transition-all">
-            <i data-feather="trending-up" class="h-3.5 w-3.5"></i> Año en Curso
-          </button>
-          <button id="tab-btn-todo" onclick="cambiarPestana('todo')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-blue-100 hover:text-white hover:bg-white/10 transition-all">
-            <i data-feather="layers" class="h-3.5 w-3.5"></i> Vista Completa
-          </button>
-          <button onclick="cargarReportes()" title="Actualizar datos" class="p-1.5 rounded-lg text-blue-200 hover:text-white hover:bg-white/15 transition-all ml-1 border-l border-white/15 pl-2">
-            <i id="icon-refresh" data-feather="refresh-cw" class="h-3.5 w-3.5"></i>
-          </button>
-        </div>
+          <!-- Selector de Pestañas: Mes / Año / Todo -->
+          <div class="flex items-center bg-black/30 p-0.5 rounded-lg border border-white/15 text-xs font-semibold gap-1">
+            <button id="tab-btn-mes" onclick="cambiarPestana('mes')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-sky-500 text-white shadow-sm transition-all">
+              <i data-feather="calendar" class="h-3.5 w-3.5"></i> Mes en Curso
+            </button>
+            <button id="tab-btn-anio" onclick="cambiarPestana('anio')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-blue-100 hover:text-white hover:bg-white/10 transition-all">
+              <i data-feather="trending-up" class="h-3.5 w-3.5"></i> Año en Curso
+            </button>
+            <button id="tab-btn-todo" onclick="cambiarPestana('todo')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-blue-100 hover:text-white hover:bg-white/10 transition-all">
+              <i data-feather="layers" class="h-3.5 w-3.5"></i> Vista Completa
+            </button>
+            <button onclick="cargarReportes()" title="Actualizar datos" class="p-1 rounded-md text-blue-200 hover:text-white hover:bg-white/15 transition-all border-l border-white/15 pl-1.5">
+              <i id="icon-refresh" data-feather="refresh-cw" class="h-3.5 w-3.5"></i>
+            </button>
+          </div>
 
+        </div>
       </div>
     </nav>
   </header>
@@ -226,6 +226,39 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- =============================================================== -->
+      <!-- HIETOGRAMA / MONITOREO DE INTENSIDAD DE LLUVIA (downld08.txt) -->
+      <!-- =============================================================== -->
+      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 rounded-2xl p-5 shadow-sm space-y-4 transition-colors">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-700/50 pb-3">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-100 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 mb-1 border border-sky-200 dark:border-sky-800">
+              <i data-feather="clock" class="h-3 w-3"></i> Registro Continuo (Últimos 8 Días)
+            </div>
+            <h3 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <i data-feather="cloud-drizzle" class="text-sky-500 h-5 w-5"></i> Monitoreo de Intensidad de Lluvia y Acumulado (8 Días)
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Hietograma de intensidad (mm/h) y precipitación acumulada (mm). Utiliza la barra inferior para hacer zoom o desplazarte por los eventos.
+            </p>
+          </div>
+          
+          <div class="flex items-center gap-3 text-xs font-semibold self-start sm:self-auto">
+            <div class="bg-slate-50 dark:bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700/60">
+              <span class="text-slate-400 text-[10px] block uppercase">Lluvia Acum. (8 Días)</span>
+              <span id="hieto-kpi-cum" class="text-sky-600 dark:text-sky-400 font-bold text-sm">-- mm</span>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700/60">
+              <span class="text-slate-400 text-[10px] block uppercase">Pico Intensidad</span>
+              <span id="hieto-kpi-peak" class="text-red-500 font-bold text-sm">-- mm/h</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenedor del Gráfico Plotly -->
+        <div id="chartHietograma" class="w-full h-[480px]"></div>
       </div>
 
       <!-- Gráfico de Viento Diario -->
@@ -461,15 +494,15 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700/60 py-8 mt-10 transition-colors">
-    <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
-      <a href="https://www.argentina.gob.ar/economia" target="_blank" class="inline-block">
-        <img src="MECON-Agricultura-BLANCO.png" alt="Secretaría de Agricultura, Ganadería y Pesca" onerror="this.style.display='none'" class="h-14 md:h-16 w-auto opacity-90 hover:opacity-100 transition mx-auto">
-      </a>
-      <p class="text-xs text-slate-400">Estación Meteorológica Automática INTA Yuto - Sistema NOAA de Monitoreo Climatológico</p>
+  <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700/60 py-8 mt-6 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <div class="flex justify-center items-center">
+        <a href="https://www.argentina.gob.ar/economia" target="_blank">
+          <img src="MECON-Agricultura-BLANCO.png" alt="Secretaría de Agricultura, Ganadería y Pesca" class="h-16 md:h-20 w-auto opacity-90 hover:opacity-100 transition">
+        </a>
+      </div>
     </div>
   </footer>
-
   <!-- JAVASCRIPT: PARSING & CHARTS -->
   <script>
     // Inicializar Feather Icons
@@ -548,6 +581,11 @@
         btnTodo.classList.remove(...inactivoClases);
       }
       feather.replace();
+      setTimeout(() => {
+        if (window.Plotly && document.getElementById('chartHietograma')) {
+          Plotly.Plots.resize('chartHietograma');
+        }
+      }, 60);
     }
 
     // Instancias de Gráficos Chart.js
@@ -557,6 +595,7 @@
     let chartAnualLluvia = null;
     let chartAnualTemp = null;
     let chartAnualViento = null;
+    let dataHietogramaCache = null;
 
     function getChartThemeColors() {
       const isDark = document.documentElement.classList.contains('dark');
@@ -588,6 +627,183 @@
         }
         ch.update();
       });
+
+      actualizarTemaHietograma();
+    }
+
+    // =========================================================================
+    // PARSER & RENDER: downld08.txt (Hietograma e Intensidad de Lluvia 8 Días)
+    // =========================================================================
+    function parseDownld08(text) {
+      const lines = text.split(/\r?\n/);
+      const timeX = [];
+      const intensityY = [];
+      const cumRainY = [];
+      
+      let currentCum = 0;
+      let maxRate = 0;
+      let maxRateTime = '--';
+      let pointCount = 0;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line || !line.includes('/')) continue;
+        if (line.includes('----------------') || line.includes('Date') || line.includes('Temp')) continue;
+
+        const dateStr = line.substring(0, 10).trim();
+        const timeStr = line.substring(10, 17).trim();
+        
+        const dateParts = dateStr.split('/');
+        if (dateParts.length !== 3) continue;
+
+        const [d, m, y] = dateParts.map(Number);
+        if (isNaN(d) || isNaN(m) || isNaN(y)) continue;
+
+        const timeParts = timeStr.split(':');
+        if (timeParts.length < 2) continue;
+        const [hh, mm] = timeParts.map(Number);
+        if (isNaN(hh) || isNaN(mm)) continue;
+
+        const pad = (n) => String(n).padStart(2, '0');
+        const fullYear = 2000 + y;
+        const isoDate = `${fullYear}-${pad(m)}-${pad(d)} ${pad(hh)}:${pad(mm)}:00`;
+
+        const rain = parseFloat(line.substring(117, 124).trim()) || 0;
+        const rate = parseFloat(line.substring(124, 131).trim()) || 0;
+
+        currentCum += rain;
+        if (rate > maxRate) {
+          maxRate = rate;
+          maxRateTime = `${pad(d)}/${pad(m)} ${pad(hh)}:${pad(mm)}`;
+        }
+
+        timeX.push(isoDate);
+        intensityY.push(rate);
+        cumRainY.push(parseFloat(currentCum.toFixed(2)));
+        pointCount++;
+      }
+
+      // Actualizar KPIs de la tarjeta
+      const kpiCum = document.getElementById('hieto-kpi-cum');
+      const kpiPeak = document.getElementById('hieto-kpi-peak');
+      if (kpiCum) kpiCum.innerText = `${currentCum.toFixed(1)} mm`;
+      if (kpiPeak) {
+        kpiPeak.innerText = maxRate > 0 ? `${maxRate.toFixed(1)} mm/h (${maxRateTime})` : '0.0 mm/h';
+      }
+
+      return {
+        timeX,
+        intensityY,
+        cumRainY,
+        totalCum: parseFloat(currentCum.toFixed(2)),
+        maxRate,
+        maxRateTime,
+        pointCount
+      };
+    }
+
+    function renderHietograma(data) {
+      if (!data || !data.timeX || data.timeX.length === 0) return;
+      dataHietogramaCache = data;
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const textColor = isDark ? '#94a3b8' : '#64748b';
+      const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+      const btnBg = isDark ? '#1e293b' : '#f1f5f9';
+      const btnActive = '#0284c7';
+
+      const traceIntensity = {
+        x: data.timeX,
+        y: data.intensityY,
+        name: 'Intensidad (mm/h)',
+        type: 'bar',
+        marker: {
+          color: '#0284c7',
+          opacity: 0.85
+        },
+        hovertemplate: '%{x}<br><b>Intensidad:</b> %{y:.1f} mm/h<extra></extra>'
+      };
+
+      const traceCum = {
+        x: data.timeX,
+        y: data.cumRainY,
+        name: 'Acumulado (mm)',
+        type: 'scatter',
+        mode: 'lines',
+        yaxis: 'y2',
+        line: {
+          color: '#f43f5e',
+          width: 2.5
+        },
+        hovertemplate: '%{x}<br><b>Acumulado:</b> %{y:.2f} mm<extra></extra>'
+      };
+
+      const layout = {
+        paper_bgcolor: 'transparent',
+        plot_bgcolor: 'transparent',
+        font: { family: 'Inter, sans-serif', color: textColor, size: 11 },
+        margin: { l: 55, r: 55, t: 25, b: 40 },
+        hovermode: 'x unified',
+        legend: {
+          orientation: 'h',
+          y: 1.12,
+          x: 0.3,
+          font: { color: textColor }
+        },
+        xaxis: {
+          type: 'date',
+          tickformat: '%d %b %H:%M',
+          gridcolor: gridColor,
+          tickfont: { color: textColor, size: 10 },
+          rangeslider: {
+            visible: true,
+            thickness: 0.08,
+            bgcolor: isDark ? '#0f172a' : '#f8fafc',
+            bordercolor: isDark ? '#334155' : '#cbd5e1'
+          },
+          rangeselector: {
+            buttons: [
+              { step: 'day', count: 1, label: '1 día', stepmode: 'backward' },
+              { step: 'day', count: 3, label: '3 días', stepmode: 'backward' },
+              { step: 'all', label: '8 días (Todo)' }
+            ],
+            bgcolor: btnBg,
+            activecolor: btnActive,
+            font: { color: textColor, size: 10 }
+          }
+        },
+        yaxis: {
+          title: { text: 'Intensidad (mm/h)', font: { color: '#0284c7', size: 11 } },
+          tickfont: { color: '#0284c7', size: 10 },
+          gridcolor: gridColor,
+          zerolinecolor: gridColor,
+          rangemode: 'tozero'
+        },
+        yaxis2: {
+          title: { text: 'Acumulado (mm)', font: { color: '#f43f5e', size: 11 } },
+          tickfont: { color: '#f43f5e', size: 10 },
+          overlaying: 'y',
+          side: 'right',
+          showgrid: false,
+          zeroline: false,
+          rangemode: 'tozero'
+        }
+      };
+
+      const config = {
+        responsive: true,
+        displayModeBar: true,
+        displaylogo: false,
+        modeBarButtonsToRemove: ['lasso2d', 'select2d']
+      };
+
+      Plotly.react('chartHietograma', [traceIntensity, traceCum], layout, config);
+    }
+
+    function actualizarTemaHietograma() {
+      if (dataHietogramaCache && window.Plotly) {
+        renderHietograma(dataHietogramaCache);
+      }
     }
 
     // =========================================================================
@@ -1320,6 +1536,23 @@
           renderGraficosAnio(dataYr);
         } else {
           console.warn("No se pudo cargar NOAAYR.TXT:", resYr.status);
+        }
+
+        // Cargar Hietograma 8 Días (downld08.txt)
+        try {
+          let resDl = await fetch('downld08.txt?t=' + new Date().getTime());
+          if (!resDl.ok) {
+            resDl = await fetch('../downld08.txt?t=' + new Date().getTime());
+          }
+          if (resDl.ok) {
+            const textDl = await resDl.text();
+            const dataDl = parseDownld08(textDl);
+            renderHietograma(dataDl);
+          } else {
+            console.warn("No se pudo cargar downld08.txt:", resDl.status);
+          }
+        } catch (eDl) {
+          console.warn("Error al cargar downld08.txt:", eDl);
         }
       } catch (err) {
         console.error("Error al cargar los reportes meteorológicos:", err);
