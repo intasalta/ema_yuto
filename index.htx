@@ -51,7 +51,7 @@
           <p class="font-semibold text-blue-100 flex items-center justify-end gap-1">
             <i data-feather="map-pin" class="h-3.5 w-3.5 text-sky-300"></i> Lat -23.58340 | Long -64.50683
           </p>
-          <p class="text-blue-200 text-[11px] mt-0.5">Altitud: 403 msnm | Davis Vantage Vue </p>
+          <p class="text-blue-200 text-[11px] mt-0.5">Altitud: 403 msnm | Davis Vantage Pro 2</p>
         </div>
 
         <button id="theme-toggle" type="button" aria-label="Cambiar Tema" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-blue-100 border border-white/20 transition-all focus:outline-none focus:ring-2 focus:ring-white/50">
@@ -70,8 +70,16 @@
             <i data-feather="home" class="h-3.5 w-3.5"></i> Inicio
           </a>
 
-          <a href="https://intasalta.github.io/ema_yuto/resumen.html" target="_blank" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-semibold transition-all shadow-sm">
-            <i data-feather="bar-chart-2" class="h-3.5 w-3.5"></i> Tendencias Mensuales
+          <a href="resumen.html" target="_blank" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-semibold transition-all shadow-sm">
+            <i data-feather="bar-chart-2" class="h-3.5 w-3.5"></i> Resumen Climático (Mes / Año)
+          </a>
+
+          <a href="downld02.xlsx" target="_blank" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all shadow-sm" title="Descargar datos crudos de los últimos 2 días en formato Excel">
+            <i data-feather="download" class="h-3.5 w-3.5 text-emerald-300"></i> Datos 2 Días (XLSX)
+          </a>
+
+          <a href="downld08.xlsx" target="_blank" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all shadow-sm" title="Descargar datos crudos de los últimos 8 días en formato Excel">
+            <i data-feather="download" class="h-3.5 w-3.5 text-emerald-300"></i> Datos 8 Días (XLSX)
           </a>
 
         </div>
