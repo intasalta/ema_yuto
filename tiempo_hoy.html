@@ -187,7 +187,7 @@
       </div>
     </div>
 
-    <!-- Grilla 2x2 de Parámetros Meteorológicos (Con ET y sin Presión Barométrica) -->
+    <!-- Grilla 2x2 de Parámetros Meteorológicos -->
     <div class="grid grid-cols-2 gap-2.5">
 
       <!-- Tarjeta 1: Humedad Relativa Actual -->
@@ -220,19 +220,19 @@
         </p>
       </div>
 
-      <!-- Tarjeta 3: Evapotranspiración (ET) -> Reemplazo de Presión Barométrica -->
+      <!-- Tarjeta 3: Presión Atmosférica -->
       <div class="glass-card rounded-2xl p-3.5 flex flex-col justify-between relative overflow-hidden">
         <div class="flex items-center justify-between text-slate-400 mb-1">
-          <span class="text-[11px] font-semibold uppercase tracking-wider">Evapotransp. (ET)</span>
-          <i data-lucide="sun-medium" class="w-4 h-4 text-amber-400"></i>
+          <span class="text-[11px] font-semibold uppercase tracking-wider">Presión Atmosf.</span>
+          <i data-lucide="gauge" class="w-4 h-4 text-indigo-400"></i>
         </div>
         <div class="flex items-baseline my-0.5">
-          <span id="et-daily-val" class="text-3xl font-extrabold text-white">--</span>
-          <span class="text-xs font-bold text-amber-400 ml-1">mm</span>
+          <span id="bar-val" class="text-3xl font-extrabold text-white">--</span>
+          <span id="bar-unit-val" class="text-xs font-bold text-indigo-400 ml-1">hPa</span>
         </div>
-        <div class="flex items-center justify-between text-[10px] text-slate-300 mt-1">
-          <span class="truncate">Diaria: <strong class="text-amber-300 font-semibold" id="et-daily-sub">--</strong></span>
-          <span class="truncate">Últ. hora: <strong class="text-slate-100 font-semibold" id="et-hour-val">--</strong></span>
+        <div class="flex items-center justify-between text-[10px] text-slate-400 mt-1">
+          <span class="truncate">Tend: <strong id="bar-trend-val" class="text-indigo-300 font-semibold">--</strong></span>
+          <span class="truncate">Mín: <strong id="bar-min-val" class="text-slate-200 font-semibold">--</strong></span>
         </div>
       </div>
 
@@ -286,7 +286,7 @@
 
     lucide.createIcons();
 
-    // Consulta principal de datos: index.html (principal) y downld02.txt (ET última hora y fallback)
+    // Consulta principal de datos: index.html (principal) y downld02.txt (fallback)
     async function fetchWeatherData() {
       const btnRefresh = document.getElementById('btn-refresh');
       btnRefresh.classList.add('animate-spin');
@@ -334,8 +334,11 @@
         humidity: '--',
         dailyRain: '0.0',
         rainRate: '0.0',
-        etDaily: '--',
-        etHour: '--',
+        barometer: '--',
+        barUnit: 'hPa',
+        barTrend: '--',
+        barMin: '--',
+        barMax: '--',
         dew: '--',
         st: '--',
         windSpeed: '0.0',
@@ -389,10 +392,41 @@
           data.rainRate = rainRateMatch[1].trim();
         }
 
-        // ET Diaria (Acumulada)
-        const etDailyMatch = indexHtml.match(/ET Diaria[\s\S]*?<p[^>]*class=["'][^"']*text-xl[^"']*["'][^>]*>([0-9.,]+)\s*mm/i);
-        if (etDailyMatch) {
-          data.etDaily = etDailyMatch[1].trim();
+        // Presión Atmosférica Actual
+        const barMatch = indexHtml.match(/Presi[oó]n Actual[\s\S]*?<p[^>]*class=["'][^"']*text-xl[^"']*["'][^>]*>\s*([0-9.,]+)(?:\s*([A-Za-z]+))?/i)
+          || indexHtml.match(/Presi[oó]n Actual[\s\S]*?<p[^>]*>\s*([0-9.,]+)(?:\s*([A-Za-z]+))?/i)
+          || indexHtml.match(/Presi[oó]n Barom[eé]trica[\s\S]*?([0-9]{3,4}(?:\.[0-9]+)?)\s*(hPa|mb|inHg)?/i);
+        if (barMatch) {
+          data.barometer = barMatch[1].trim();
+          if (barMatch[2]) data.barUnit = barMatch[2].trim();
+        }
+
+        // Tendencia Barométrica (3 hs)
+        const trendMatch = indexHtml.match(/Tendencia[\s\S]*?<\/p>\s*<p[^>]*>([^<]+)<\/p>/i)
+          || indexHtml.match(/Tendencia(?:\s*\([^)]*\))?[\s\S]*?<p[^>]*class=["'][^"']*text-sm[^"']*["'][^>]*>([^<]+)<\/p>/i);
+        if (trendMatch) {
+          const rawTrend = trendMatch[1].trim();
+          const tLower = rawTrend.toLowerCase();
+          const trendMap = {
+            'rising slowly': 'Subiendo lento',
+            'rising rapidly': 'Subiendo rápido',
+            'rising': 'Subiendo',
+            'falling slowly': 'Bajando lento',
+            'falling rapidly': 'Bajando rápido',
+            'falling': 'Bajando',
+            'steady': 'Estable'
+          };
+          data.barTrend = trendMap[tLower] || rawTrend;
+        }
+
+        // Mínima y Máxima Diaria de Presión
+        const barSectionMatch = indexHtml.match(/Presi[oó]n Barom[eé]trica[\s\S]*?<\/table>/i);
+        if (barSectionMatch) {
+          const dailyMatch = barSectionMatch[0].match(/<td[^>]*>\s*Diaria\s*<\/td>[\s\S]*?<td[^>]*>\s*([0-9.,]+)\s*(?:[A-Za-z]+)?\s*<\/td>[\s\S]*?<td[^>]*>\s*([0-9.,]+)\s*(?:[A-Za-z]+)?\s*<\/td>/i);
+          if (dailyMatch) {
+            data.barMin = dailyMatch[1].trim();
+            data.barMax = dailyMatch[2].trim();
+          }
         }
 
         // Punto de Rocío
@@ -443,7 +477,7 @@
         }
       }
 
-      // 2. Extraer ET última hora y fallbacks desde downld02.txt (Nota: El viento NO se toma de downld02.txt)
+      // 2. Extraer fallbacks desde downld02.txt (Nota: El viento NO se toma de downld02.txt)
       if (downldText) {
         const lines = downldText.trim().split('\n').filter(l => l.trim().length > 0);
         const headerLine = lines.find(l => /Date\s+Time/i.test(l));
@@ -454,10 +488,10 @@
           const lastLine = dataLines[dataLines.length - 1];
           const tokens = lastLine.trim().split(/\s+/);
 
-          // ET última hora
-          const etIdx = headers.findIndex(h => /^et$/i.test(h));
-          if (etIdx !== -1 && tokens[etIdx] && tokens[etIdx] !== '---') {
-            data.etHour = tokens[etIdx];
+          // Presión Barométrica (fallback si falta en index.html)
+          const barIdx = headers.findIndex(h => /^bar$/i.test(h));
+          if (barIdx !== -1 && tokens[barIdx] && tokens[barIdx] !== '---') {
+            if (data.barometer === '--') data.barometer = tokens[barIdx];
           }
 
           // Fallbacks si falta algo en index.html (temperatura, humedad, fecha/hora)
@@ -470,7 +504,6 @@
           }
           if (data.date === '--') data.date = tokens[0] || '--';
           if (data.time === '--') data.time = tokens[1] || '--';
-          if (data.etDaily === '--' && data.etHour !== '--') data.etDaily = data.etHour;
         }
       }
 
@@ -488,10 +521,11 @@
       document.getElementById('rain-val').innerText = data.dailyRain;
       document.getElementById('rain-rate-val').innerText = data.rainRate;
 
-      // Evapotranspiración (ET)
-      document.getElementById('et-daily-val').innerText = data.etDaily;
-      document.getElementById('et-daily-sub').innerText = `${data.etDaily} mm`;
-      document.getElementById('et-hour-val').innerText = data.etHour !== '--' ? `${data.etHour} mm` : '--';
+      // Presión Atmosférica
+      document.getElementById('bar-val').innerText = data.barometer;
+      document.getElementById('bar-unit-val').innerText = data.barUnit || 'hPa';
+      document.getElementById('bar-trend-val').innerText = data.barTrend !== '--' ? data.barTrend : 'Estable';
+      document.getElementById('bar-min-val').innerText = data.barMin !== '--' ? data.barMin : '--';
 
       // Viento (extraído exclusivamente de index.html)
       document.getElementById('wind-speed-val').innerText = data.windSpeed !== '--' ? data.windSpeed : '0.0';
