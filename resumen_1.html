@@ -1784,9 +1784,10 @@ async function cargarReportes() {
         }
 
         // Cargar Historial de Informes Mensuales en PDF
-        await cargarInformesPDF();
-
-          console.warn("No se pudo cargar NOAAYR.TXT:", resYr.status);
+        try {
+          await cargarInformesPDF();
+        } catch (ePdf) {
+          console.warn("Error cargando informes PDF:", ePdf);
         }
 
         // Cargar Hietograma 8 Días (downld08.txt)
